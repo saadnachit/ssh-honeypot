@@ -1,0 +1,29 @@
+#include <tunables/global>
+profile honeypot-ssh flags=(complain) {
+  include <abstractions/base>
+  include <abstractions/python>
+
+  # Réseau TCP (v4/v6) pour SSH
+  network inet tcp,
+  network inet6 tcp,
+
+  # Lire le code du projet
+  /opt/ssh_honeypot/** r,
+  /opt/ssh_honeypot/venv/** mr,
+
+  # Écrire les logs
+  /var/log/honeypot/ rw,
+  /var/log/honeypot/* rw,
+  /opt/ssh_honeypot/keys/ rw,
+  /opt/ssh_honeypot/keys/* rw,
+
+  # Bibliothèques dynamiques
+  /usr/lib/** mr,
+  /lib/** mr,
+  /usr/lib/x86_64-linux-gnu/** mr,
+
+  # Réduction de surface
+  deny /etc/** r,
+  deny /proc/** r,
+  deny /home/** r,
+}
